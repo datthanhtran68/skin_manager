@@ -12,7 +12,7 @@ app.secret_key = 'super_secret_key_123'
 
 # Sửa ở đây
 mongo_uri = os.environ.get("MONGO_URI")
-client = MongoClient(mongo_uri)
+client = MongoClient("mongodb+srv://<db_username>:<db_password>@cluster0.4wdweoi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 db = client['skin_manager']
 app.config['games_collection'] = db['games']
