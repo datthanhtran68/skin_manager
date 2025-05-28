@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Danh Sách Game & Skin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div class="container mx-auto p-6">
+        <!-- Header với các nút đăng nhập/đăng ký hoặc đăng xuất -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center mb-2">
+                <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-600">
+                    🔥 Danh Sách Game & Skin 🔥
+                </h1>
+                {% if is_authenticated %}
+                <div class="flex items-center space-x-4">
+                    <p>Xin chào, {{ current_user.username }}!</p>
+                    <a href="{{ url_for('auth.logout') }}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Đăng Xuất</a>
+                </div>
+                {% else %}
+                <div class="space-x-4">
+                    <button onclick="showModal('login-modal')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Đăng Nhập</button>
+                    <button onclick="showModal('register-modal')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Đăng Ký</button>
+                </div>
+                {% endif %}
+            </div>
+            <!-- Slideshow -->
+            <div class="relative w-full overflow-hidden mb-4">
+                <div id="slideshow" class="flex transition-transform duration-300 ease-linear whitespace-nowrap">
+                    {% if skins %}
+                        {% for skin in skins %}
+                        <div class="inline-block flex-shrink-0 w-48 h-48 mx-2">
+                            <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-full h-full object-cover rounded" />
+                        </div>
+                        {% endfor %}
+                        <!-- Nhân đôi hình ảnh để tạo hiệu ứng lặp vô hạn -->
+                        {% for skin in skins %}
+                        <div class="inline-block flex-shrink-0 w-48 h-48 mx-2">
+                            <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-full h-full object-cover rounded" />
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="inline-block flex-shrink-0 w-48 h-48 mx-2 bg-gray-700 rounded flex items-center justify-center">
+                            <p>Chưa có skin</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Form tìm kiếm -->
+            <form action="{{ url_for('auth.index') }}" method="GET" class="flex space-x-2 mb-4">
+                <input type="text" name="search" placeholder="Tìm game hoặc skin..." value="{{ search_query|default('') }}" class="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white" />
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tìm kiếm</button>
+            </form>
+        </div>
+
+        <!-- Thông báo flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+            <div class="p-4 rounded {{ 'bg-green-600' if category == 'success' else 'bg-red-600' }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Modal đăng nhập -->
+        <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+            <div class="bg-gray-800 p-6 rounded max-w-md w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Đăng Nhập</h2>
+                    <button onclick="hideModal('login-modal')" class="text-2xl text-white hover:text-red-500">×</button>
+                </div>
+                <form action="{{ url_for('auth.login') }}" method="POST">
+                    <div class="mb-4">
+                        <label for="login-username" class="block text-sm font-medium">Tên người dùng</label>
+                        <input type="text" id="login-username" name="username" class="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="login-password" class="block text-sm font-medium">Mật khẩu</label>
+                        <input type="password" id="login-password" name="password" class="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Đăng Nhập</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal đăng ký -->
+        <div id="register-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+            <div class="bg-gray-800 p-6 rounded max-w-md w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Đăng Ký</h2>
+                    <button onclick="hideModal('register-modal')" class="text-2xl text-white hover:text-red-500">×</button>
+                </div>
+                <form action="{{ url_for('auth.register') }}" method="POST">
+                    <div class="mb-4">
+                        <label for="register-username" class="block text-sm font-medium">Tên người dùng</label>
+                        <input type="text" id="register-username" name="username" class="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-password" class="block text-sm font-medium">Mật khẩu</label>
+                        <input type="password" id="register-password" name="password" class="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal đăng ký thành công -->
+        <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center {{ 'hidden' if not register_success else '' }} z-50">
+            <div class="bg-gray-800 p-6 rounded max-w-md w-full text-center">
+                <h2 class="text-xl font-semibold mb-4">Đăng ký thành công!</h2>
+                <button onclick="showModal('login-modal'); hideModal('success-modal')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Đăng Nhập</button>
+            </div>
+        </div>
+
+        <!-- Kết quả tìm kiếm hoặc giao diện mặc định -->
+        {% if search_query %}
+            <!-- Hiển thị kết quả tìm kiếm -->
+            <h2 class="text-2xl font-semibold mb-4">Kết quả tìm kiếm cho "{{ search_query }}"</h2>
+            {% if search_results.games or search_results.skins %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Hiển thị game tìm được -->
+                    {% for game in search_results.games %}
+                    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold mb-2">{{ game.name }}</h3>
+                            <p class="text-gray-400">Thể loại: {{ game.genre }}</p>
+                            <p class="text-gray-400">Năm phát hành: {{ game.release_year }}</p>
+                        </div>
+                        {% if game.skins %}
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold mb-2">Skin:</h4>
+                            <div class="grid grid-cols-1 gap-4">
+                                {% for skin in game.skins %}
+                                <div class="bg-gray-700 rounded-lg overflow-hidden">
+                                    <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-full h-48 object-cover" />
+                                    <div class="p-4">
+                                        <h5 class="text-md font-semibold">{{ skin.name }}</h5>
+                                        <p class="text-gray-400">Độ hiếm: {{ skin.rarity }}</p>
+                                        <p class="text-gray-400">Giá: {{ skin.price }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <!-- Hiển thị skin tìm được (không gắn với game cụ thể) -->
+                    {% for skin in search_results.skins %}
+                    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold mb-2">Skin: {{ skin.name }}</h3>
+                            <p class="text-gray-400">Game: {{ skin.game_name|default('Không xác định') }}</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="bg-gray-700 rounded-lg overflow-hidden">
+                                <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-full h-48 object-cover" />
+                                <div class="p-4">
+                                    <h5 class="text-md font-semibold">{{ skin.name }}</h5>
+                                    <p class="text-gray-400">Độ hiếm: {{ skin.rarity }}</p>
+                                    <p class="text-gray-400">Giá: {{ skin.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="p-4 bg-gray-800 rounded text-center">
+                    <p>Không tìm thấy game hoặc skin nào khớp với "{{ search_query }}".</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- Giao diện mặc định -->
+            {% if is_authenticated %}
+            <!-- Giao diện bảng cho người dùng đã đăng nhập -->
+            <div class="mb-6">
+                <button onclick="showAddGameForm()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 flex items-center">
+                    <span class="mr-2">+</span> Thêm Game Mới
+                </button>
+            </div>
+
+            <!-- Form thêm game mới -->
+            <div id="add-game-form" class="hidden mb-6 p-4 bg-gray-800 rounded">
+                <h2 class="text-xl font-semibold mb-2">Thêm Game Mới</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input id="new-game-name" type="text" placeholder="Tên game" class="bg-gray-700 border border-gray-600 p-2 rounded text-white" />
+                    <input id="new-game-genre" type="text" placeholder="Thể loại" class="bg-gray-700 border border-gray-600 p-2 rounded text-white" />
+                    <input id="new-game-release-year" type="text" placeholder="Năm phát hành" class="bg-gray-700 border border-gray-600 p-2 rounded text-white" />
+                </div>
+                <button onclick="addGame()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Thêm</button>
+            </div>
+
+            <!-- Bảng danh sách game -->
+            <table class="w-full bg-gray-800 rounded">
+                <thead>
+                    <tr class="bg-gray-700">
+                        <th class="p-3 text-left">Game</th>
+                        <th class="p-3 text-left">Thể Loại</th>
+                        <th class="p-3 text-left">Năm Phát Hành</th>
+                        <th class="p-3 text-left">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="game-list">
+                    {% for game in games %}
+                    <tr class="border-b border-gray-700" onclick="toggleSkins('{{ game._id }}')" style="cursor: pointer;">
+                        <td class="p-3">{{ game.name }}</td>
+                        <td class="p-3">{{ game.genre }}</td>
+                        <td class="p-3">{{ game.release_year }}</td>
+                        <td class="p-3 flex space-x-2">
+                            <button onclick="showEditGame(event, '{{ game._id }}', '{{ game.name }}', '{{ game.genre }}', '{{ game.release_year }}')" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Sửa</button>
+                            <button onclick="deleteGame(event, '{{ game._id }}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Xóa</button>
+                            <button onclick="showAddSkinForm(event, '{{ game._id }}')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Thêm Skin</button>
+                        </td>
+                    </tr>
+                    <!-- Form sửa game -->
+                    <tr id="edit-game-{{ game._id }}" class="hidden">
+                        <td colspan="4" class="p-4 bg-gray-700">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input id="edit-game-name-{{ game._id }}" type="text" value="{{ game.name }}" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                <input id="edit-game-genre-{{ game._id }}" type="text" value="{{ game.genre }}" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                <input id="edit-game-release-year-{{ game._id }}" type="text" value="{{ game.release_year }}" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                            </div>
+                            <button onclick="updateGame('{{ game._id }}')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cập nhật</button>
+                        </td>
+                    </tr>
+                    <!-- Bảng danh sách skin -->
+                    <tr id="skins-{{ game._id }}" class="hidden">
+                        <td colspan="4" class="p-4 bg-gray-700">
+                            <h4 class="text-lg font-semibold mb-2">Skin của {{ game.name }}:</h4>
+                            <!-- Form thêm skin mới -->
+                            <div id="add-skin-form-{{ game._id }}" class="hidden mb-4 p-4 bg-gray-800 rounded">
+                                <h5 class="text-md font-semibold mb-2">Thêm Skin Mới</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <input id="new-skin-name-{{ game._id }}" type="text" placeholder="Tên skin" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                    <input id="new-skin-rarity-{{ game._id }}" type="text" placeholder="Độ hiếm" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                    <input id="new-skin-price-{{ game._id }}" type="text" placeholder="Giá" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                    <input id="new-skin-image-{{ game._id }}" type="text" placeholder="URL hình ảnh" class="bg-gray-600 border border-gray-500 p-2 rounded text-white" />
+                                </div>
+                                <button onclick="addSkin('{{ game._id }}')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Thêm Skin</button>
+                            </div>
+                            <!-- Bảng danh sách skin -->
+                            <table class="w-full bg-gray-800 rounded">
+                                <thead>
+                                    <tr class="bg-gray-700">
+                                        <th class="p-3 text-left">Tên Skin</th>
+                                        <th class="p-3 text-left">Độ Hiếm</th>
+                                        <th class="p-3 text-left">Giá</th>
+                                        <th class="p-3 text-left">Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for skin in game.skins %}
+                                    <tr class="border-b border-gray-700">
+                                        <td class="p-3 flex items-center">
+                                            <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-20 h-20 object-cover rounded mr-2" />
+                                            {{ skin.name }}
+                                        </td>
+                                        <td class="p-3">{{ skin.rarity }}</td>
+                                        <td class="p-3">{{ skin.price }}</td>
+                                        <td class="p-3 flex space-x-2">
+                                            <button onclick="showEditSkin(event, '{{ game._id }}', '{{ skin._id }}', '{{ skin.name }}', '{{ skin.rarity }}', '{{ skin.price }}', '{{ skin.image }}')" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Sửa</button>
+                                            <button onclick="deleteSkin(event, '{{ game._id }}', '{{ skin._id }}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Form sửa skin -->
+                                    <tr id="edit-skin-{{ skin._id }}" class="hidden">
+                                        <td colspan="4" class="p-4 bg-gray-600">
+                                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                                <input id="edit-skin-name-{{ skin._id }}" type="text" value="{{ skin.name }}" class="bg-gray-500 border border-gray-400 p-2 rounded text-white" />
+                                                <input id="edit-skin-rarity-{{ skin._id }}" type="text" value="{{ skin.rarity }}" class="bg-gray-500 border border-gray-400 p-2 rounded text-white" />
+                                                <input id="edit-skin-price-{{ skin._id }}" type="text" value="{{ skin.price }}" class="bg-gray-500 border border-gray-400 p-2 rounded text-white" />
+                                                <input id="edit-skin-image-{{ skin._id }}" type="text" value="{{ skin.image }}" class="bg-gray-500 border border-gray-400 p-2 rounded text-white" />
+                                            </div>
+                                            <button onclick="updateSkin('{{ game._id }}', '{{ skin._id }}')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cập nhật</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <!-- Giao diện lưới cho người dùng chưa đăng nhập -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for game in games %}
+                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold mb-2">{{ game.name }}</h3>
+                        <p class="text-gray-400">Thể loại: {{ game.genre }}</p>
+                        <p class="text-gray-400">Năm phát hành: {{ game.release_year }}</p>
+                    </div>
+                    {% if game.skins %}
+                    <div class="p-4">
+                        <h4 class="text-lg font-semibold mb-2">Skin:</h4>
+                        <div class="grid grid-cols-1 gap-4">
+                            {% for skin in game.skins %}
+                            <div class="bg-gray-700 rounded-lg overflow-hidden">
+                                <img src="{{ skin.image }}" alt="{{ skin.name }}" class="w-full h-48 object-cover" />
+                                <div class="p-4">
+                                    <h5 class="text-md font-semibold">{{ skin.name }}</h5>
+                                    <p class="text-gray-400">Độ hiếm: {{ skin.rarity }}</p>
+                                    <p class="text-gray-400">Giá: {{ skin.price }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endif %}
+
+        <!-- Modal xem ảnh lớn -->
+        <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+            <div class="relative max-w-4xl max-h-[90vh]">
+                <button id="close-modal" class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-500 cursor-pointer">×</button>
+                <img id="modal-image" src="" alt="Xem ảnh" class="max-w-full max-h-[90vh] rounded" />
+            </div>
+        </div>
+
+        <script>
+            // Hàm hiển thị modal
+            function showModal(modalId) {
+                document.getElementById(modalId).classList.remove('hidden');
+            }
+
+            // Hàm ẩn modal
+            function hideModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            // Slideshow
+            document.addEventListener('DOMContentLoaded', () => {
+                const slideshow = document.getElementById('slideshow');
+                if (slideshow) {
+                    let position = 0;
+                    const slideWidth = 208; // 192px (w-48) + 8px (mx-2) + 8px (mx-2)
+                    const totalSlides = slideshow.children.length / 2; // Chỉ tính nửa đầu (trước khi nhân đôi)
+                    const maxPosition = totalSlides * slideWidth;
+
+                    function slide() {
+                        position -= 1; // Di chuyển sang trái
+                        if (Math.abs(position) >= maxPosition) {
+                            position = 0; // Reset về đầu để lặp vô hạn
+                        }
+                        slideshow.style.transform = `translateX(${position}px)`;
+                        requestAnimationFrame(slide);
+                    }
+
+                    requestAnimationFrame(slide);
+                }
+            });
+
+            // Script cho người dùng đã đăng nhập
+            {% if is_authenticated %}
+            function showAddGameForm() {
+                const form = document.getElementById('add-game-form');
+                form.classList.toggle('hidden');
+            }
+
+            function addGame() {
+                const name = document.getElementById('new-game-name').value.trim();
+                const genre = document.getElementById('new-game-genre').value.trim();
+                const release_year = document.getElementById('new-game-release-year').value.trim();
+                if (!name || !genre || !release_year) {
+                    alert('Vui lòng nhập đầy đủ thông tin');
+                    return;
+                }
+                fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, genre, release_year }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+
+            function showEditGame(e, id, name, genre, release_year) {
+                e.stopPropagation();
+                const editRow = document.getElementById(`edit-game-${id}`);
+                if (!editRow) return;
+                editRow.classList.toggle('hidden');
+            }
+
+            function updateGame(id) {
+                const name = document.getElementById(`edit-game-name-${id}`).value.trim();
+                const genre = document.getElementById(`edit-game-genre-${id}`).value.trim();
+                const release_year = document.getElementById(`edit-game-release-year-${id}`).value.trim();
+                if (!name || !genre || !release_year) {
+                    alert('Vui lòng nhập đầy đủ thông tin');
+                    return;
+                }
+                fetch(`/api/games/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, genre, release_year }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+
+            function deleteGame(e, id) {
+                e.stopPropagation();
+                if (!confirm('Xác nhận xóa game?')) return;
+                fetch(`/api/games/${id}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) alert(data.error);
+                        else location.reload();
+                    })
+                    .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+
+            function toggleSkins(gameId) {
+                const skinsRow = document.getElementById(`skins-${gameId}`);
+                if (!skinsRow) return;
+                skinsRow.classList.toggle('hidden');
+            }
+
+            function showAddSkinForm(e, gameId) {
+                e.stopPropagation();
+                const form = document.getElementById(`add-skin-form-${gameId}`);
+                if (!form) return;
+                form.classList.toggle('hidden');
+            }
+
+            function addSkin(gameId) {
+                const name = document.getElementById(`new-skin-name-${gameId}`).value.trim();
+                const rarity = document.getElementById(`new-skin-rarity-${gameId}`).value.trim();
+                const price = document.getElementById(`new-skin-price-${gameId}`).value.trim();
+                const image = document.getElementById(`new-skin-image-${gameId}`).value.trim();
+                if (!name || !rarity || !price || !image) {
+                    alert('Vui lòng nhập đầy đủ thông tin skin');
+                    return;
+                }
+                fetch(`/api/games/${gameId}/skins`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, rarity, price, image }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) alert(data.error);
+                    else location.reload();
+                })
+                .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+
+            function showEditSkin(e, gameId, skinId, name, rarity, price, image) {
+                e.stopPropagation();
+                const editRow = document.getElementById(`edit-skin-${skinId}`);
+                if (!editRow) return;
+                editRow.classList.toggle('hidden');
+            }
+
+            function updateSkin(gameId, skinId) {
+                const name = document.getElementById(`edit-skin-name-${skinId}`).value.trim();
+                const rarity = document.getElementById(`edit-skin-rarity-${skinId}`).value.trim();
+                const price = document.getElementById(`edit-skin-price-${skinId}`).value.trim();
+                const image = document.getElementById(`edit-skin-image-${skinId}`).value.trim();
+                if (!name || !rarity || !price || !image) {
+                    alert('Vui lòng nhập đầy đủ thông tin skin');
+                    return;
+                }
+                fetch(`/api/games/${gameId}/skins/${skinId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, rarity, price, image }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) alert(data.error);
+                    else location.reload();
+                })
+                .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+
+            function deleteSkin(e, gameId, skinId) {
+                e.stopPropagation();
+                if (!confirm('Xác nhận xóa skin?')) return;
+                fetch(`/api/games/${gameId}/skins/${skinId}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) alert(data.error);
+                        else location.reload();
+                    })
+                    .catch(() => alert('Lỗi mạng, thử lại sau'));
+            }
+            {% endif %}
+
+            // Modal xem ảnh lớn
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('img').forEach(img => {
+                    img.style.cursor = 'zoom-in';
+                    img.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const modal = document.getElementById('image-modal');
+                        const modalImg = document.getElementById('modal-image');
+                        modalImg.src = e.target.src;
+                        modal.classList.remove('hidden');
+                    });
+                });
+
+                document.getElementById('close-modal').addEventListener('click', () => {
+                    document.getElementById('image-modal').classList.add('hidden');
+                });
+
+                document.getElementById('image-modal').addEventListener('click', e => {
+                    if (e.target.id === 'image-modal') {
+                        document.getElementById('image-modal').classList.add('hidden');
+                    }
+                });
+
+                // Đóng modal khi click bên ngoài
+                document.querySelectorAll('#login-modal, #register-modal, #success-modal').forEach(modal => {
+                    modal.addEventListener('click', e => {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <style>
+            .modal.hidden {
+                display: none;
+            }
+        </style>
+</body>
+</html>
