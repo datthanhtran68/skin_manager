@@ -1,0 +1,168 @@
+[{
+  "_id": {
+    "$oid": "6835eed9fbca1359fd140c4e"
+  },
+  "game_id": {
+    "$oid": "6835ee4bfbca1359fd140c48"
+  },
+  "name": "Elderflame Vandal",
+  "rarity": "Legendary",
+  "price": 2475,
+  "image": "https://valorantstrike.com/wp-content/uploads/2020/07/Valorant-Elderflame-Collection-Vandal-HD.jpg"
+},
+{
+  "_id": {
+    "$oid": "68361ebd6cc681ffd0028eab"
+  },
+  "game_id": {
+    "$oid": "68361bb506000ca4e2ffc9cf"
+  },
+  "name": "Eika",
+  "rarity": "legend",
+  "price": 2311,
+  "image": "https://klbq-web-cms.strinova.com/prod/strinova_web/images/202505/6d534833-7a13-4520-937f-10de148dfe6b.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836bd11fc2f784f096fb468"
+  },
+  "game_id": {
+    "$oid": "68361bb506000ca4e2ffc9cf"
+  },
+  "name": "Kanami",
+  "rarity": "legend",
+  "price": 2131,
+  "image": "https://static.wikitide.net/strinovawiki/thumb/2/22/Be_Shining_Cover.jpg/454px-Be_Shining_Cover.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836be29fc2f784f096fb46b"
+  },
+  "game_id": {
+    "$oid": "6836be04fc2f784f096fb46a"
+  },
+  "name": "Spirit Blossom Zyra",
+  "rarity": "red",
+  "price": 23123,
+  "image": "https://www.mobafire.com/images/champion/skins/landscape/zyra-spirit-blossom-762x.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836be60fc2f784f096fb46c"
+  },
+  "game_id": {
+    "$oid": "6836be04fc2f784f096fb46a"
+  },
+  "name": "Pengu Garen",
+  "rarity": "blue",
+  "price": 0,
+  "image": "https://www.mobafire.com/images/champion/skins/landscape/garen-pengu-762x.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836bf54fc2f784f096fb46e"
+  },
+  "game_id": {
+    "$oid": "6836befefc2f784f096fb46d"
+  },
+  "name": "Cherries Snow-Laden",
+  "rarity": "no",
+  "price": 123,
+  "image": "https://upload-os-bbs.hoyolab.com/upload/2025/01/09/301212167/aca10fe391a9461a08c5fec96fdf4c61_6992673456140908432.webp?x-oss-process=image%2Fresize%2Cs_1000%2Fauto-orient%2C0%2Finterlace%2C1%2Fformat%2Cwebp%2Fquality%2Cq_70"
+},
+{
+  "_id": {
+    "$oid": "6836bfeafc2f784f096fb470"
+  },
+  "game_id": {
+    "$oid": "6836bfc1fc2f784f096fb46f"
+  },
+  "name": "Carlotta",
+  "rarity": "no",
+  "price": 2134,
+  "image": "https://img.game8.co/4154025/3cceb054876c46c1fe41f8998703c098.png/show"
+},
+{
+  "_id": {
+    "$oid": "6836c78680dfc6fb74ac5af6"
+  },
+  "game_id": {
+    "$oid": "6836bfc1fc2f784f096fb46f"
+  },
+  "name": "Sanhua Skin",
+  "rarity": "no",
+  "price": 23131,
+  "image": "https://img.game8.co/4076810/a3b6cc3e00baab84731a3952c37f0363.png/show"
+},
+{
+  "_id": {
+    "$oid": "6836c7e480dfc6fb74ac5af7"
+  },
+  "game_id": {
+    "$oid": "6836befefc2f784f096fb46d"
+  },
+  "name": "Opulent Splendor",
+  "rarity": "no",
+  "price": 12313,
+  "image": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2022/01/Keqing-Opulent-Splendor-outfit.jpg?q=70&fit=contain&w=1200&h=628&dpr=1"
+},
+{
+  "_id": {
+    "$oid": "6836c8f580dfc6fb74ac5af9"
+  },
+  "game_id": {
+    "$oid": "6835ee4bfbca1359fd140c48"
+  },
+  "name": "ChronoVoid Collection",
+  "rarity": "Exclusive",
+  "price": 213123,
+  "image": "https://valorantstrike.com/wp-content/uploads/Valorant-Chronovoid-Collection-HD.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836c96380dfc6fb74ac5afb"
+  },
+  "game_id": {
+    "$oid": "6836c93580dfc6fb74ac5afa"
+  },
+  "name": "Violet Tiệc Bãi Biển",
+  "rarity": "SS",
+  "price": 3000,
+  "image": "https://lienquan.garena.vn/wp-content/uploads/2024/05/25c05f91f9d63ab927938064af43ad8c5b3d8a39bdeaf1.png"
+},
+{
+  "_id": {
+    "$oid": "6836c98280dfc6fb74ac5afc"
+  },
+  "game_id": {
+    "$oid": "6836c93580dfc6fb74ac5afa"
+  },
+  "name": "Airi Mị Hồ",
+  "rarity": "S+ (Hữu hạn)",
+  "price": 199,
+  "image": "https://lienquan.garena.vn/wp-content/uploads/2024/05/de4231b4ff4c6e19f9b7d1efcbb06f765e453137b361f1.jpg"
+},
+{
+  "_id": {
+    "$oid": "6836cc3580dfc6fb74ac5afe"
+  },
+  "game_id": {
+    "$oid": "6836cc0d80dfc6fb74ac5afd"
+  },
+  "name": "Chibi Gwen",
+  "rarity": "no",
+  "price": 200,
+  "image": "https://wiki.leagueoflegends.com/en-us/images/Chibi_Gwen_Base_Tier_1.png?fc9c7"
+},
+{
+  "_id": {
+    "$oid": "6836cc6e80dfc6fb74ac5aff"
+  },
+  "game_id": {
+    "$oid": "6836cc0d80dfc6fb74ac5afd"
+  },
+  "name": "Chibi Irelia",
+  "rarity": "no",
+  "price": 200,
+  "image": "https://wiki.leagueoflegends.com/en-us/images/Chibi_Irelia_Base_Tier_1.png?1dcac"
+}]
