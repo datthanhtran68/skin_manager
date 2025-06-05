@@ -5,6 +5,7 @@ from routes.auth import auth_bp
 from routes.games import games_bp
 from routes.skins import skins_bp
 from models.user import load_user
+import os
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key_123'  # Thay bằng key an toàn trong production
@@ -27,6 +28,6 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(games_bp, url_prefix='/api')
 app.register_blueprint(skins_bp, url_prefix='/api')
 
-if __name__ == '__main__':
-    print("🔥 Flask app is rolling like VinFast...")
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Render sẽ set biến PORT
+    app.run(host="0.0.0.0", port=port)
