@@ -30,10 +30,7 @@ app.register_blueprint(games_bp, url_prefix='/api')
 app.register_blueprint(skins_bp, url_prefix='/api')
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     port = int(os.environ.get("PORT", 5000))  # Render sẽ set biến PORT
     app.run(host="0.0.0.0", port=port)
-=======
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
->>>>>>> 39f6686a873da61a2163480fe10de7c2b0c5ec26
