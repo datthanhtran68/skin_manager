@@ -1,0 +1,48 @@
+[{
+  "_id": {
+    "$oid": "6836b057e4e5ccd3c8c36d21"
+  },
+  "username": "hotiga4377@wifame.com",
+  "password": {
+    "$binary": {
+      "base64": "JDJiJDEyJHE2dmkvZVlHTFVHYlJYUTNkLy5EcHVWOVAwWXozektVSkJNYTFrNkRJc0pITWhaZ0ZtUXBT",
+      "subType": "00"
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "6836b06ee4e5ccd3c8c36d22"
+  },
+  "username": "phongnk",
+  "password": {
+    "$binary": {
+      "base64": "JDJiJDEyJFVjbXcyNVhrSlhqcjRzazBhZWJSSk9aUGtQMXZIbHRFbjdUeWd2MHJNWWRFc1VYLmhKaklH",
+      "subType": "00"
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "6836b2a3364d46d92bf2fdb9"
+  },
+  "username": "eureka",
+  "password": {
+    "$binary": {
+      "base64": "JDJiJDEyJDZaU3N1Z0EyNEk2dE5MV0s3eHhSSE9pZ1VZdWNmOHouRDZNYVdrdjNlUHFzU0RTaHVRdmlL",
+      "subType": "00"
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "6836ce3580dfc6fb74ac5b00"
+  },
+  "username": "Eika",
+  "password": {
+    "$binary": {
+      "base64": "JDJiJDEyJDFMUndnUEppUmVXblFsWVhPWWkuMk9uOXlKRTlzTFVPdW1NNzQ1b0Q3d1pwNGl0UlZ4Nkgy",
+      "subType": "00"
+    }
+  }
+}]
